@@ -2,16 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Sootravyooh - Live Scoreboard</title>
+<title>Sootravyooh - Admin</title>
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
 <header>
-  <div class="logo">
-    <img src="logo-2.png" alt="DSU Logo">
-  </div>
+  <div class="logo"><img src="logo-2.png" alt="DSU Logo"></div>
   <div class="header-center">
     <h1>Sootravyooh</h1>
     <h2>Organized by Brahmagupta Mathematics Club</h2>
@@ -20,6 +18,7 @@
     <button onclick="document.getElementById('teamSection').scrollIntoView({behavior:'smooth'})">Teams</button>
     <button onclick="document.getElementById('scoreSection').scrollIntoView({behavior:'smooth'})">Scores</button>
     <button onclick="document.getElementById('graphSection').scrollIntoView({behavior:'smooth'})">Score Trend</button>
+    <a href="viewer.html"><button>Audience View</button></a>
   </div>
 </header>
 
@@ -28,7 +27,6 @@
   <input type="text" id="teamName" placeholder="Enter Team Name">
   <button onclick="addTeam()">Add Team</button>
   <button onclick="resetData()" style="background:#ff4444;">Reset All Data</button>
-  <ul id="teamList"></ul>
 </section>
 
 <section id="scoreSection">
