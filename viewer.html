@@ -3,59 +3,45 @@
 <head>
 <meta charset="UTF-8">
 <title>Sootravyooh - Live Results</title>
+<link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-body { font-family: Arial, sans-serif; margin:0; padding:0; background:#121212; color:#e0e0e0; }
-header { position: fixed; top:0; left:0; width:100%; background:#1f1f1f; padding:10px 20px; border-bottom:2px solid #ffcc00; z-index:1000; display:flex; align-items:center; justify-content:center; }
-header h1 { margin:0; font-size:1.6em; color:#ffcc00; }
-section { margin:120px auto 20px; padding:20px; width:85%; background:#1e1e1e; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.4); }
-h2 { color:#ffcc00; text-align:center; margin-bottom:20px; }
-.teamBox { margin:15px 0; padding:15px; border:1px solid #333; border-radius:12px; background:#2b2b2b; box-shadow:0 4px 10px rgba(0,0,0,0.5); }
-.teamBox strong { display:block; margin-bottom:12px; font-size:1.2em; }
-.roundCard { margin:8px 0; padding:12px; background:#1e1e1e; border:1px solid #444; border-radius:10px; box-shadow:0 3px 6px rgba(0,0,0,0.5); display:flex; justify-content:space-between; }
-.roundName { font-weight:bold; color:#ffcc00; }
-canvas { background:#1e1e1e; border-radius:6px; margin-top:15px; }
-</style>
 </head>
 <body>
 
 <header>
-<h1>Sootravyooh - Live Scoreboard</h1>
+  <div class="logo"><img src="logo-2.png" alt="DSU Logo"></div>
+  <div class="header-center">
+    <h1>Sootravyooh</h1>
+    <h2>Live Results</h2>
+  </div>
+  <div class="header-buttons">
+    <a href="index.html"><button>Admin Page</button></a>
+  </div>
 </header>
 
 <section id="scoreSection">
-<h2>Team Scores</h2>
-<div id="scorePanel"></div>
+  <h2>Team Scores</h2>
+  <div id="scorePanel"></div>
 </section>
 
 <section id="graphSection">
-<h2>Score Trend Per Round</h2>
-<canvas id="trendChart" width="800" height="400"></canvas>
+  <h2>Score Trend Per Round</h2>
+  <canvas id="trendChart" width="800" height="400"></canvas>
 </section>
 
 <script>
-// Sample live data: Replace with Google Sheets CSV or JSON URL for real live
-const sheetUrl = "https://docs.google.com/spreadsheets/d/e/YOUR_SHEET_ID/pub?output=csv";
-
 let teams = [];
 let chart;
 
 function getRandomColor() { return "hsl(" + Math.random() * 360 + ", 70%, 60%)"; }
 
-async function fetchScores() {
-  try {
-    const res = await fetch(sheetUrl);
-    const csvText = await res.text();
-    const lines = csvText.trim().split("\n");
-    const data = lines.slice(1).map(l => l.split(","));
-    teams = data.map(row => ({
-      name: row[0],
-      scores: row.slice(1).map(Number),
-      color: getRandomColor()
-    }));
+function fetchData() {
+  const saved = localStorage.getItem('teamsData');
+  if(saved) {
+    teams = JSON.parse(saved);
     updateUI();
-  } catch(e) {
-    console.error("Error fetching sheet:", e);
+  } else {
+    document.getElementById("scorePanel").innerHTML = "<p>No results yet.</p>";
   }
 }
 
@@ -63,16 +49,18 @@ function updateUI() {
   const scorePanel = document.getElementById("scorePanel");
   scorePanel.innerHTML = "";
 
-  teams.forEach(t=>{
+  teams.forEach((t)=>{
     const div = document.createElement("div");
     div.className = "teamBox";
     div.innerHTML = `<strong style="color:${t.color}">${t.name}</strong>`;
+
     t.scores.forEach((score,i)=>{
       const roundDiv = document.createElement("div");
       roundDiv.className = "roundCard";
       roundDiv.innerHTML = `<div class="roundName">Round ${i+1}</div><div>Score: ${score}</div>`;
       div.appendChild(roundDiv);
     });
+
     scorePanel.appendChild(div);
   });
 
@@ -82,6 +70,7 @@ function updateUI() {
 function updateGraph() {
   const ctx = document.getElementById("trendChart").getContext("2d");
   if(chart) chart.destroy();
+
   if(teams.length === 0) return;
 
   const rounds = teams[0].scores.length;
@@ -105,14 +94,14 @@ function updateGraph() {
     options: {
       responsive: true,
       plugins: { legend: { display: true, position: 'bottom', labels: { color: '#ffcc00' } } },
-      scales: { x: { ticks: { color: '#ffcc00' } }, y: { beginAtZero:true, ticks:{color:'#ffcc00'} } }
+      scales: { x: { ticks: { color: '#ffcc00' } }, y: { beginAtZero: true, ticks: { color: '#ffcc00' } } }
     }
   });
 }
 
-// Auto-refresh every 5 seconds
-fetchScores();
-setInterval(fetchScores, 5000);
+// Refresh every 3 seconds
+fetchData();
+setInterval(fetchData, 3000);
 </script>
 
 </body>
