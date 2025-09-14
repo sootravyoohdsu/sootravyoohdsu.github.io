@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sootravyooh - Live Results</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="logo"><img src="logo-2.png" alt="DSU Logo"></div>
+  <div class="header-center">
+    <h1>Sootravyooh</h1>
+    <h2>Live Results</h2>
+  </div>
+  <div class="header-buttons">
+    <a href="index.html"><button>Admin Page</button></a>
+  </div>
+</header>
+
+<section id="scoreSection">
+  <h2>Team Scores</h2>
+  <div id="scorePanel"></div>
+</section>
+
+<section id="graphSection">
+  <h2>Score Trend Per Round</h2>
+  <canvas id="trendChart" width="800" height="400"></canvas>
+</section>
+
+<script>
+let teams = [];
+let chart;
+
+function getRandomColor() { return "hsl(" + Math.random() * 360 + ", 70%, 60%)"; }
+
+function fetchData() {
+  const saved = localStorage.getItem('teamsData');
+  if(saved) {
+    teams = JSON.parse(saved);
+    updateUI();
+  } else {
+    document.getElementById("scorePanel").innerHTML = "<p>No results yet.</p>";
+  }
+}
+
+function updateUI() {
+  const scorePanel = document.getElementById("scorePanel");
+  scorePanel.innerHTML = "";
+
+  teams.forEach((t)=>{
+    const div = document.createElement("div");
+    div.className = "teamBox";
+    div.innerHTML = `<strong style="color:${t.color}">${t.name}</strong>`;
+
+    t.scores.forEach((score,i)=>{
+      const roundDiv = document.createElement("div");
+      roundDiv.className = "roundCard";
+      roundDiv.innerHTML = `<div class="roundName">Round ${i+1}</div><div>Score: ${score}</div>`;
+      div.appendChild(roundDiv);
+    });
+
+    scorePanel.appendChild(div);
+  });
+
+  updateGraph();
+}
+
+function updateGraph() {
+  const ctx = document.getElementById("trendChart").getContext("2d");
+  if(chart) chart.destroy();
+
+  if(teams.length === 0) return;
+
+  const rounds = teams[0].scores.length;
+  const labels = Array.from({length: rounds}, (_, i) => "Round " + (i+1));
+
+  const datasets = teams.map(t => ({
+    label: t.name,
+    data: t.scores.map((s,i)=>t.scores.slice(0,i+1).reduce((a,b)=>a+b,0)),
+    borderColor: t.color,
+    backgroundColor: 'transparent',
+    tension: 0.4,
+    fill: false,
+    pointRadius: 5,
+    pointHoverRadius: 7,
+    borderWidth: 3
+  }));
+
+  chart = new Chart(ctx, {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: true, position: 'bottom', labels: { color: '#ffcc00' } } },
+      scales: { x: { ticks: { color: '#ffcc00' } }, y: { beginAtZero: true, ticks: { color: '#ffcc00' } } }
+    }
+  });
+}
+
+// Refresh every 3 seconds
+fetchData();
+setInterval(fetchData, 3000);
+</script>
+
+</body>
+</html>
