@@ -31,7 +31,7 @@ function addTeam() {
 }
 
 function updateScore(teamIndex, roundIndex, change) {
-  teams[teamIndex].scores[roundIndex] += change; // allow negative
+  teams[teamIndex].scores[roundIndex] += change; 
   updateUI();
 }
 
@@ -42,13 +42,11 @@ function updateUI() {
   teamNav.innerHTML = "";
 
   teams.forEach((t,i)=>{
-    // team navigation button
     const navBtn = document.createElement("button");
     navBtn.innerText = t.name;
     navBtn.onclick = ()=>document.getElementById(`teamBox${i}`).scrollIntoView({behavior:'smooth'});
     teamNav.appendChild(navBtn);
 
-    // team score box
     const div = document.createElement("div");
     div.className = "teamBox";
     div.id = `teamBox${i}`;
@@ -72,7 +70,7 @@ function updateUI() {
   });
 
   updateGraph();
-  saveData(); // Auto-save after every UI update
+  saveData();
 }
 
 function updateGraph() {
@@ -83,7 +81,7 @@ function updateGraph() {
 
   const datasets = teams.map(t => ({
     label: t.name,
-    data: t.scores.map((s,i)=>t.scores.slice(0,i+1).reduce((a,b)=>a+b,0)), // cumulative
+    data: t.scores.map((s,i)=>t.scores.slice(0,i+1).reduce((a,b)=>a+b,0)),
     borderColor: t.color,
     backgroundColor: 'transparent',
     tension: 0.4, 
@@ -109,21 +107,18 @@ function updateGraph() {
   });
 }
 
-// Save teams and scores to localStorage
 function saveData() {
   localStorage.setItem('teamsData', JSON.stringify(teams));
 }
 
-// Reset all teams and scores
 function resetData() {
-  if(confirm("Are you sure you want to delete all data? This cannot be undone.")) {
+  if(confirm("Are you sure you want to delete all data?")) {
     teams = [];
     localStorage.removeItem('teamsData');
     updateUI();
   }
 }
 
-// Random color generator for teams
 function getRandomColor() {
   return "hsl(" + Math.random() * 360 + ", 70%, 60%)";
 }
