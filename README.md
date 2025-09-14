@@ -1,1 +1,0 @@
-# sootravyoohdsu.github.io
