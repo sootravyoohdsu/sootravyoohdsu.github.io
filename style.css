@@ -1,0 +1,38 @@
+body { 
+  font-family: Arial, sans-serif; 
+  margin:0; padding:0; 
+  background:#121212; 
+  color:#e0e0e0; 
+}
+
+header { 
+  position: fixed; top:0; left:0; width:100%; 
+  background:#1f1f1f; 
+  padding:10px 20px; border-bottom:2px solid #ffcc00; 
+  z-index:1000;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.logo img { height:50px; }
+
+.header-center { text-align: center; flex-grow: 1; }
+.header-center h1 { margin:0; font-size:1.4em; color:#ffcc00; }
+.header-center h2 { margin:0; font-size:0.9em; color:#bbb; }
+
+.header-buttons { display:flex; flex-wrap:wrap; gap:5px; justify-content:flex-end; }
+.header-buttons button { margin-left:5px; }
+
+button { margin:3px; padding:5px 12px; border:none; border-radius:6px; background:#ffcc00; font-weight:bold; cursor:pointer; font-size:0.85em; transition:0.2s; }
+button:hover { background:#ffaa00; color:#000; transform:translateY(-2px); }
+
+section { margin:140px auto 20px; padding:20px; width:85%; background:#1e1e1e; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.4); }
+h2 { color:#ffcc00; text-align:center; margin-bottom:20px; }
+
+.teamBox { margin:15px 0; padding:15px; border:1px solid #333; border-radius:12px; background:#2b2b2b; box-shadow:0 4px 10px rgba(0,0,0,0.5); }
+.teamBox strong { display:block; margin-bottom:12px; font-size:1.2em; }
+
+.roundCard { margin:8px 0; padding:12px; background:#1e1e1e; border:1px solid #444; border-radius:10px; box-shadow:0 3px 6px rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; }
+.roundCard div { margin:3px; }
+.roundName { font-weight:bold; color:#ffcc00; margin-bottom:4px; }
+
+canvas { background:#1e1e1e; border-radius:6px; margin-top:15px; }
